@@ -86,6 +86,12 @@ elsif node['openstack']['image']['api']['default_store'] == 'rbd'
 end
 
 service 'glance-api' do
+  case node["platform"]
+  when "ubuntu"
+    if node["platform_version"].to_f >= 14.04
+      provider Chef::Provider::Service::Upstart
+    end
+  end
   service_name platform_options['image_api_service']
   supports status: true, restart: true
 
