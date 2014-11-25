@@ -85,6 +85,12 @@ directory ::File.dirname(node['openstack']['image']['registry']['auth']['cache_d
 end
 
 service 'glance-registry' do
+  case node["platform"]
+  when "ubuntu"
+    if node["platform_version"].to_f >= 14.04
+      provider Chef::Provider::Service::Upstart
+    end
+  end
   service_name platform_options['image_registry_service']
   supports status: true, restart: true
 
